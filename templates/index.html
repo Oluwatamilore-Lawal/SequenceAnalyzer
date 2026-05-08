@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sequence Analyzer</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .card { border: 1px solid #ccc; padding: 15px; margin: 10px 0; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Sequence Analyzer</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        <textarea name="sequence" rows="5" cols="50">{{ sequence }}</textarea><br>
+        <input type="file" name="file"><br>
+
+        <label><input type="checkbox" name="operations" value="type"> Type</label>
+        <label><input type="checkbox" name="operations" value="composition"> Composition</label>
+        <label><input type="checkbox" name="operations" value="translate"> Translate</label>
+        <label><input type="checkbox" name="operations" value="transcribe"> Transcribe</label>
+        <label><input type="checkbox" name="operations" value="reverse"> Reverse</label>
+        <label><input type="checkbox" name="operations" value="protein"> Protein</label>
+
+        <br><button type="submit">Analyze</button>
+    </form>
+
+    {% for r in results %}
+        <div class="card">
+            {% if r.kind == 'error' %}
+                <div class="error">{{ r.value }}</div>
+            {% elif r.kind == 'type' %}
+                <strong>Type:</strong> {{ r.value }}
+            {% elif r.kind == 'composition' %}
+                <pre>{{ r.value }}</pre>
+            {% elif r.kind == 'sequence' %}
+                <strong>{{ r.label }}:</strong>
+                <pre>{{ r.value }}</pre>
+            {% elif r.kind == 'protein' %}
+                <strong>Protein:</strong> {{ r.value }}
+                {% if r.warning %}<div>{{ r.warning }}</div>{% endif %}
+            {% endif %}
+        </div>
+    {% endfor %}
+</body>
+</html>
